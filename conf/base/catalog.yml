@@ -1,0 +1,20 @@
+# Here you can define all your data sets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+
+data_x_raw:
+  type: pandas.JSONDataSet
+  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/Oscar/Takeout/Historial de ubicaciones/Records.json"
+
+df_x:
+  type: pandas.CSVDataSet
+  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/intermediate/df_x.csv"
+
+data_y_raw:
+  type: pandas.JSONDataSet
+  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/Aina/Takeout/Historial de ubicaciones/Records.json"
+
+df_y:
+  type: pandas.CSVDataSet
+  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/intermediate/df_y.csv"

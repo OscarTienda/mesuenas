@@ -1,0 +1,35 @@
+x_name: "Oscar"
+
+y_name: "Aina"
+
+# Set our accuracy level
+# ----------------------
+# Define the accuracy level to be used in the pipeline. This can be utilized
+# to set a margin of error or level of precision for distance calculations.
+# The accuracy levels and their corresponding specifications are as follows:
+#
+# - Level '1': An accuracy of 111 meters with 3 decimal places (notation: +/- 00.000)
+# - Level '2': An accuracy of 11.1 meters with 4 decimal places (notation: +/- 00.0000)
+# - Level '3': An accuracy of 1.11 meters with 5 decimal places (notation: +/- 00.00000)
+# - Level '4': An accuracy of 0.111 meters with 6 decimal places (notation: +/- 00.000000)
+#
+# These levels are defined in the Distance_Margin DataFrame.
+
+accuracy_level: "3"
+
+# Set our time margin
+# -------------------
+# Define the time margin to be used in the pipeline. This can be utilized
+# to set a margin of error or level of precision for time calculations.
+# The time margin is defined in minutes.
+# Choose a time margin you feel comfortable with. The default is 5 minutes.
+
+time_margin: 5
+
+# Indicate the date of your official first meeting
+# ------------------------------------------------
+# This is the date of your first official meeting. This is used to filter
+# out any data that is not relevant to the analysis. The date should be
+# formatted as follows: 'YYYY-MM-DD HH:MM:SS'
+
+#first_meeting_date: 
