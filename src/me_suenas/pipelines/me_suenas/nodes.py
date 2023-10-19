@@ -5,6 +5,7 @@ generated using Kedro 0.18.14
 
 import pandas as pd
 import polars as pl
+import datetime
 
 def process_df(df: pd.DataFrame) -> pd.DataFrame:
     return pd.concat([df.drop(['locations'], axis=1), df['locations'].apply(pd.Series)], axis=1)
@@ -72,7 +73,7 @@ end_date = pd.Timestamp('2021-08-06 19:00:00')
 print('End date is', end_date)
 """
 
-def prepare_timestamps(df_x: pd.DataFrame, df_y: pd.DataFrame, first_date: pd.Timestamp, x_name: str, y_name: str):
+def prepare_timestamp(df_x: pd.DataFrame, df_y: pd.DataFrame, first_date: pd.Timestamp, x_name: str, y_name: str):
     # Turn 'timestamp' to datetime
     df_x['timestamp'] = pd.to_datetime(df_x['timestamp'], format='ISO8601')
     df_y['timestamp'] = pd.to_datetime(df_y['timestamp'], format='ISO8601')
@@ -102,3 +103,27 @@ def prepare_timestamps(df_x: pd.DataFrame, df_y: pd.DataFrame, first_date: pd.Ti
     df_y.reset_index(drop=True, inplace=True)
 
     return df_x, df_y
+
+def round_datetime_to_nearest_margin(tm: datetime, time_margin: int) -> datetime:
+    if time_margin <= 0:
+        raise ValueError("Time margin must be positive and non-zero.")
+    
+    discard = datetime.timedelta(
+        minutes=tm.minute % time_margin,
+        seconds=tm.second,
+        microseconds=tm.microsecond,
+    )
+    tm -= discard
+    if discard >= datetime.timedelta(minutes=time_margin / 2):
+        tm += datetime.timedelta(minutes=time_margin)
+
+    return tm
+
+def normalize_timestamp(df_x: pd.DataFrame, df_y: pd.DataFrame, time_margin: int):
+    df_norm_time_x = df_x.copy()
+    df_norm_time_x['timestamp'] = df_norm_time_x['timestamp'].apply(round_datetime_to_nearest_margin, args=(time_margin,))
+
+    df_norm_time_y = df_y.copy()
+    df_norm_time_y['timestamp'] = df_norm_time_y['timestamp'].apply(round_datetime_to_nearest_margin, args=(time_margin,))
+        
+    return df_norm_time_x, df_norm_time_y

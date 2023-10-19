@@ -21,7 +21,7 @@ accuracy_level: "3"
 # -------------------
 # Define the time margin to be used in the pipeline. This can be utilized
 # to set a margin of error or level of precision for time calculations.
-# The time margin is defined in minutes.
+# The time margin is defined in minutes and has to be an integer.
 # Choose a time margin you feel comfortable with. The default is 5 minutes.
 
 time_margin: 5

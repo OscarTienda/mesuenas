@@ -23,15 +23,24 @@ def me_suenas_pipeline(**kwargs):
                 name="set_accuracy_level"
             ),
             node(
-                func=prepare_timestamps,
+                func=prepare_timestamp,
                 inputs=[
                     "df_x",
                     "df_y",
                     "params:first_meeting_date",
                     "params:x_name",
                     "params:y_name"],
-                outputs=["df_x_timestamps", "df_y_timestamps"],
-                name="prepare_timestamps"
+                outputs=["df_x_timestamp", "df_y_timestamp"],
+                name="prepare_timestamp"
             ),
+            node(
+                func=normalize_timestamp,
+                inputs=[
+                    "df_x_timestamp",
+                    "df_y_timestamp",
+                    "params:time_margin"],
+                outputs=["df_x_timestamps_norm", "df_y_timestamps_norm"],
+                name="normalize_timestamps"
+            )
         ]
     )
