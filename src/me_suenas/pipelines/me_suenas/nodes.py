@@ -72,7 +72,7 @@ end_date = pd.Timestamp('2021-08-06 19:00:00')
 print('End date is', end_date)
 """
 
-def prepare_timestamps(df_x: pd.DataFrame, df_y: pd.DataFrame, first_date: pd.Timestamp) -> tuple:
+def prepare_timestamps(df_x: pd.DataFrame, df_y: pd.DataFrame, first_date: pd.Timestamp, x_name: str, y_name: str):
     # Turn 'timestamp' to datetime
     df_x['timestamp'] = pd.to_datetime(df_x['timestamp'], format='ISO8601')
     df_y['timestamp'] = pd.to_datetime(df_y['timestamp'], format='ISO8601')
@@ -82,8 +82,8 @@ def prepare_timestamps(df_x: pd.DataFrame, df_y: pd.DataFrame, first_date: pd.Ti
     earliest_y = df_y['timestamp'].min()
 
     # Print earliest timestamp
-    print('Earliest timestamp for', x, 'is', earliest_x)
-    print('Earliest timestamp for', y, 'is', earliest_y)
+    print('Earliest timestamp for', x_name, 'is', earliest_x)
+    print('Earliest timestamp for', y_name, 'is', earliest_y)
 
     # Define start date
     start_date = max(earliest_x, earliest_y)
@@ -91,7 +91,7 @@ def prepare_timestamps(df_x: pd.DataFrame, df_y: pd.DataFrame, first_date: pd.Ti
 
     # Define end date as the date of our first date
     end_date = first_date
-    print('End date is ', end_date)
+    print('The date you both met officially is ', end_date)
 
     # Filter out timestamps outside of start and end dates
     df_x = df_x[(df_x['timestamp'] >= start_date) & (df_x['timestamp'] <= end_date)]
