@@ -47,8 +47,9 @@ def me_suenas_pipeline(**kwargs):
                 inputs=[
                     "df_x_timestamps_norm",
                     "params:x_name",
-                    "accuracy_info"],
-                outputs="df_x_common_locations",
+                    "accuracy_info"
+                    ],
+                outputs="df_x_common_timestamps",
                 name="preprocess_map_data_x"
             ),
             node(
@@ -56,9 +57,10 @@ def me_suenas_pipeline(**kwargs):
                 inputs=[
                     "df_y_timestamps_norm",
                     "params:y_name",
-                    "accuracy_info"],
-                outputs="df_y_common_locations",
+                    "accuracy_info"
+                    ],
+                outputs="df_y_common_timestamps",
                 name="preprocess_map_data_y"
-            ),
+            )
         ]
     )

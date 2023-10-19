@@ -19,10 +19,10 @@ df_y:
   type: pandas.CSVDataSet
   filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/intermediate/df_y.csv"
 
-df_x_common_locations:
+df_x_common_timestamps:
   type: pandas.CSVDataSet
   filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/intermediate/person_x_common_location_history.csv"
 
-df_y_common_locations:
+df_y_common_timestamps:
   type: pandas.CSVDataSet
   filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/intermediate/person_y_common_location_history.csv"
