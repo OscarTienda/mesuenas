@@ -73,30 +73,6 @@ def set_accuracy_level(accuracy_level: str) -> dict:
 
     return accuracy_info
 
-
-"""
-# Turn 'timestamp' to datetime
-df_x['timestamp'] = pd.to_datetime(df_x['timestamp'], format='ISO8601')
-df_y['timestamp'] = pd.to_datetime(df_y['timestamp'], format='ISO8601')
-
-# Find earliest timestamp
-earliest_x = df_x['timestamp'].min()
-earliest_y = df_y['timestamp'].min()
-
-# Print earliest timestamp
-print('Earliest timestamp for', x, 'is', earliest_x)
-print('Earliest timestamp for', y, 'is', earliest_y)
-
-# Define start date
-start_date = max(earliest_x, earliest_y)
-print('\nStart date is', start_date)
-
-# Define end date as the date of our first date
-end_date = pd.Timestamp('2021-08-06 19:00:00')
-print('End date is', end_date)
-"""
-
-
 def prepare_timestamp(
     df_x: pd.DataFrame,
     df_y: pd.DataFrame,
@@ -165,14 +141,14 @@ def normalize_timestamp(df_x: pd.DataFrame, df_y: pd.DataFrame, time_margin: int
     return df_norm_time_x, df_norm_time_y
 
 
-def preprocess_map_data_for_person(df: pd.DataFrame, person: str, accuracy_info: dict):
+def preprocess_map_data_for_person(df: pd.DataFrame, accuracy_info: dict):
+    df = df.copy()
     distance_accuracy = accuracy_info["decimal places"]
 
     df = df[["timestamp", "latitudeE7", "longitudeE7", "accuracy", "source"]]
     df.rename(
         columns={"latitudeE7": "latitude", "longitudeE7": "longitude"}, inplace=True
     )
-    df["person"] = person
     df["latitude"] = df["latitude"] / 10**7
     df["longitude"] = df["longitude"] / 10**7
     df["latitude"] = df["latitude"].round(distance_accuracy)
@@ -186,3 +162,9 @@ def preprocess_map_data_for_person(df: pd.DataFrame, person: str, accuracy_info:
 
     return df
 
+def combine_records(df_x: pd.DataFrame, df_y: pd.DataFrame, name_x: str, name_y: str):
+    df = pd.merge(df_x, df_y, on=['timestamp', 'coordinates'], suffixes=(name_x,name_y))
+    return df
+
+def find_encounters(df: pd.DataFrame):
+    return df
