@@ -5,13 +5,13 @@ def me_suenas_pipeline(**kwargs):
     return Pipeline(
         [
            # node(
-           #     func=process_df,
+           #     func=expand_locations_column,
            #     inputs="data_x_raw",
            #     outputs="df_x",
            #     name="process_data_x"
            # ),
            # node(
-           #     func=process_df,
+           #     func=expand_locations_column,
            #     inputs="data_y_raw",
            #     outputs="df_y",
            #     name="process_data_y"
@@ -41,6 +41,24 @@ def me_suenas_pipeline(**kwargs):
                     "params:time_margin"],
                 outputs=["df_x_timestamps_norm", "df_y_timestamps_norm"],
                 name="normalize_timestamps"
-            )
+            ),
+            node(
+                func=preprocess_map_data_for_person,
+                inputs=[
+                    "df_x_timestamps_norm",
+                    "params:x_name",
+                    "accuracy_info"],
+                outputs="df_x_common_locations",
+                name="preprocess_map_data_x"
+            ),
+            node(
+                func=preprocess_map_data_for_person,
+                inputs=[
+                    "df_y_timestamps_norm",
+                    "params:y_name",
+                    "accuracy_info"],
+                outputs="df_y_common_locations",
+                name="preprocess_map_data_y"
+            ),
         ]
     )

@@ -7,7 +7,7 @@ import pandas as pd
 import polars as pl
 import datetime
 
-def process_df(df: pd.DataFrame) -> pd.DataFrame:
+def expand_locations_column(df: pd.DataFrame) -> pd.DataFrame:
     return pd.concat([df.drop(['locations'], axis=1), df['locations'].apply(pd.Series)], axis=1)
 
 def process_df_pl(df: pd.DataFrame) -> pd.DataFrame:
@@ -48,6 +48,7 @@ def set_accuracy_level(accuracy_level: str) -> dict:
     # Setting 'accuracy.level' as the index for easier lookup and referencing.
     Distance_Margin.set_index('accuracy.level', inplace=True)
     accuracy_info = Distance_Margin.loc[accuracy_level].to_dict()
+    print('Accuracy level set to', accuracy_level, 'which corresponds to an accuracy of +/-', accuracy_info['accuracy (m)'], 'meters.')
 
     return accuracy_info
 
@@ -127,3 +128,22 @@ def normalize_timestamp(df_x: pd.DataFrame, df_y: pd.DataFrame, time_margin: int
     df_norm_time_y['timestamp'] = df_norm_time_y['timestamp'].apply(round_datetime_to_nearest_margin, args=(time_margin,))
         
     return df_norm_time_x, df_norm_time_y
+
+def preprocess_map_data_for_person(df: pd.DataFrame, person: str, accuracy_info: dict):
+    distance_accuracy = accuracy_info['decimal places']
+
+    df = df[['timestamp', 'latitudeE7', 'longitudeE7', 'accuracy', 'source']]
+    df.rename(columns={'latitudeE7': 'latitude', 'longitudeE7': 'longitude'}, inplace=True)
+    df['person'] = person
+    df['latitude'] = df['latitude'] / 10**7
+    df['longitude'] = df['longitude'] / 10**7
+    df['latitude'] = df['latitude'].round(distance_accuracy)
+    df['longitude'] = df['longitude'].round(distance_accuracy)
+    df['coordinates'] = df['latitude'].astype(str) + ' ' + df['longitude'].astype(str)
+
+    df = df[df['accuracy'] >= 0]
+    df = df[df['source'] != 'UNKNOWN']
+    df.drop_duplicates(inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    
+    return df
