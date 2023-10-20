@@ -5,7 +5,8 @@ generated using Kedro 0.18.14
 
 import pandas as pd
 import polars as pl
-import datetime
+import datetime, webbrowser
+from typing import Dict
 
 
 def expand_locations_column(df: pd.DataFrame) -> pd.DataFrame:
@@ -145,7 +146,6 @@ def preprocess_map_data_for_person(df: pd.DataFrame, accuracy_info: dict):
     df = df.copy()
     distance_accuracy = accuracy_info["decimal places"]
 
-    df = df[["timestamp", "latitudeE7", "longitudeE7", "accuracy", "source"]]
     df.rename(
         columns={"latitudeE7": "latitude", "longitudeE7": "longitude"}, inplace=True
     )
@@ -153,18 +153,41 @@ def preprocess_map_data_for_person(df: pd.DataFrame, accuracy_info: dict):
     df["longitude"] = df["longitude"] / 10**7
     df["latitude"] = df["latitude"].round(distance_accuracy)
     df["longitude"] = df["longitude"].round(distance_accuracy)
-    df["coordinates"] = df["latitude"].astype(str) + " " + df["longitude"].astype(str)
+    df["coordinates"] = df["latitude"].astype(str) + "," + df["longitude"].astype(str)
+    df["gmaps_url"] = (
+        "https://www.google.com/maps/place/"
+        + df["coordinates"]
+        )
+    df.drop(["latitude", "longitude"], axis=1, inplace=True)
+    
+
+    # Extract date and timefrom timestamp
+    df["date"] = pd.to_datetime(df["timestamp"]).dt.strftime('%d-%m-%Y')
+    df["time"] = pd.to_datetime(df["timestamp"]).dt.strftime('%H:%M:%S')
+    df.drop(["timestamp"], axis=1, inplace=True)
 
     df = df[df["accuracy"] >= 0]
     df = df[df["source"] != "UNKNOWN"]
     df.drop_duplicates(inplace=True)
     df.reset_index(drop=True, inplace=True)
 
-    return df
+    return df[["date", "time", "coordinates", "accuracy", "source", "gmaps_url"]]
 
 def combine_records(df_x: pd.DataFrame, df_y: pd.DataFrame, name_x: str, name_y: str):
-    df = pd.merge(df_x, df_y, on=['timestamp', 'coordinates'], suffixes=(name_x,name_y))
+    df = pd.merge(df_x, df_y, on=['date', 'time', 'coordinates'], suffixes=("_" + name_x,"_" + name_y))
     return df
 
-def find_encounters(df: pd.DataFrame):
-    return df
+def find_encounters(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
+    common_locations = df.copy()
+
+    # Group by date
+    grouped = common_locations.groupby("date")
+
+    # Create a dictionary to hold each day's data
+    encounters = {}
+    for name, group in grouped:
+        # Create a DataFrame to hold each day's data
+        encounters[name] = group.copy().drop_duplicates()
+        print("Found encounters on", name)
+
+    return encounters

@@ -5,18 +5,18 @@ from .nodes import *
 def me_suenas_pipeline(**kwargs):
     return Pipeline(
         [
-            # node(
-            #     func=expand_locations_column,
-            #     inputs="data_x_raw",
-            #     outputs="df_x",
-            #     name="process_data_x"
-            # ),
-            # node(
-            #     func=expand_locations_column,
-            #     inputs="data_y_raw",
-            #     outputs="df_y",
-            #     name="process_data_y"
-            # ),
+            node(
+                func=expand_locations_column,
+                inputs="data_x_raw",
+                outputs="df_x",
+                name="process_data_x",
+            ),
+            node(
+                func=expand_locations_column,
+                inputs="data_y_raw",
+                outputs="df_y",
+                name="process_data_y",
+            ),
             node(
                 func=set_accuracy_level,
                 inputs="params:accuracy_level",

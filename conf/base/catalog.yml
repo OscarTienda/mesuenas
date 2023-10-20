@@ -3,26 +3,26 @@
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 
-data_x_raw:
-  type: pandas.JSONDataSet
-  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/Oscar/Takeout/Historial de ubicaciones/Records.json"
+# INPUTS
+# ------
+# Place your input filepaths here. It is suggested to place them under
+# the "data/" directory and use absolute paths.
 
-df_x:
-  type: pandas.CSVDataSet
-  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/intermediate/df_x.csv"
+data_x_raw:
+  type: pandas.JSONDataset
+  filepath: "data/Oscar/Takeout/Historial de ubicaciones/Records.json"
 
 data_y_raw:
-  type: pandas.JSONDataSet
-  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/Aina/Takeout/Historial de ubicaciones/Records.json"
+  type: pandas.JSONDataset
+  filepath: "data/Aina/Takeout/Historial de ubicaciones/Records.json"
 
-df_y:
-  type: pandas.CSVDataSet
-  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/intermediate/df_y.csv"
+# OUTPUTS
+# -------
+# There is no need to change this path. If you do, make sure to create a specific
+# folder for it since it is a PartitionedDataSet.
 
-df_x_common_timestamps:
-  type: pandas.CSVDataSet
-  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/intermediate/person_x_common_location_history.csv"
-
-df_y_common_timestamps:
-  type: pandas.CSVDataSet
-  filepath: "C:/Users/otienda/Documents/Me suenas/me_suenas_kedro/data/intermediate/person_y_common_location_history.csv"
+df_encounters:
+  type: PartitionedDataset
+  path: "data/encounters/"
+  filename_suffix: .csv
+  dataset: pandas.CSVDataset
