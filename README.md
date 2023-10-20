@@ -1,7 +1,11 @@
 # Me Suenas Project
 
+<div align="center">
+    <img src="logo.png" alt="Logo" width="800">
+</div>
+
 ## Overview
-Me Suenas is an open-source project that explores the possibility of having crossed paths with a friend or significant other before officially meeting them. By utilizing exported Google Location History data in JSON format, this project analyzes and identifies when and where such encounters might have occurred.
+Me Suenas is an open-source project inspired by a personal experience of the original author. The phrase "Me suenas" was what the significant other told the developer, which translates to "I think I know you from before". This project explores the possibility of having crossed paths with a friend or significant other before officially meeting them. By utilizing exported Google Location History data in JSON format, this project analyzes and identifies when and where such encounters might have occurred.
 
 To get started, both individuals need to export their Google Location History data by visiting [Google Takeout](https://takeout.google.com/), deselecting all options, selecting only Google Location History, and downloading the JSON file with default settings.
 
