@@ -4,8 +4,7 @@ generated using Kedro 0.18.14
 """
 
 import pandas as pd
-import polars as pl
-import datetime, webbrowser
+import datetime
 from typing import Dict
 
 
@@ -13,31 +12,6 @@ def expand_locations_column(df: pd.DataFrame) -> pd.DataFrame:
     return pd.concat(
         [df.drop(["locations"], axis=1), df["locations"].apply(pd.Series)], axis=1
     )
-
-
-def process_df_pl(df: pd.DataFrame) -> pd.DataFrame:
-    # Convert Pandas DataFrame to Polars DataFrame
-    df_pl = pl.DataFrame(df)
-
-    # Convert every dict in the 'locations' column to a column in the df.
-    processed_df_pl = (
-        df_pl.drop("locations")
-        .lazy()
-        .join(
-            df_pl.select(
-                pl.col("locations")
-                .apply(lambda x: list(x.values()), return_dtype=pl.Object)
-                .alias("exploded")
-            )
-            .lazy()
-            .explode("exploded")
-            .select(["*", "exploded.*"])
-        )
-        .collect()
-    )
-
-    # Convert back to Pandas DataFrame
-    return processed_df_pl.to_pandas()
 
 
 def set_accuracy_level(accuracy_level: str) -> dict:
@@ -73,6 +47,7 @@ def set_accuracy_level(accuracy_level: str) -> dict:
     )
 
     return accuracy_info
+
 
 def prepare_timestamp(
     df_x: pd.DataFrame,
@@ -154,28 +129,40 @@ def preprocess_map_data_for_person(df: pd.DataFrame, accuracy_info: dict):
     df["latitude"] = df["latitude"].round(distance_accuracy)
     df["longitude"] = df["longitude"].round(distance_accuracy)
     df["coordinates"] = df["latitude"].astype(str) + "," + df["longitude"].astype(str)
-    df["gmaps_url"] = (
-        "https://www.google.com/maps/place/"
-        + df["coordinates"]
-        )
-    df.drop(["latitude", "longitude"], axis=1, inplace=True)
-    
+    df["gmaps_url"] = "https://www.google.com/maps/place/" + df["coordinates"].astype(
+        str
+    )
+    df.drop(
+        [
+            "latitude",
+            "longitude",
+        ],
+        axis=1,
+        inplace=True,
+    )
 
     # Extract date and timefrom timestamp
-    df["date"] = pd.to_datetime(df["timestamp"]).dt.strftime('%d-%m-%Y')
-    df["time"] = pd.to_datetime(df["timestamp"]).dt.strftime('%H:%M:%S')
-    df.drop(["timestamp"], axis=1, inplace=True)
+    df["date"] = pd.to_datetime(df["timestamp"]).dt.strftime("%d-%m-%Y")
+    df["time"] = pd.to_datetime(df["timestamp"]).dt.strftime("%H:%M:%S")
 
     df = df[df["accuracy"] >= 0]
     df = df[df["source"] != "UNKNOWN"]
-    df.drop_duplicates(inplace=True)
     df.reset_index(drop=True, inplace=True)
 
-    return df[["date", "time", "coordinates", "accuracy", "source", "gmaps_url"]]
+    return df[
+        ["date", "time", "coordinates", "accuracy", "source", "gmaps_url"]
+    ].drop_duplicates()
+
 
 def combine_records(df_x: pd.DataFrame, df_y: pd.DataFrame, name_x: str, name_y: str):
-    df = pd.merge(df_x, df_y, on=['date', 'time', 'coordinates'], suffixes=("_" + name_x,"_" + name_y))
+    df = pd.merge(
+        df_x,
+        df_y,
+        on=["date", "time", "coordinates"],
+        suffixes=("_" + name_x, "_" + name_y),
+    )
     return df
+
 
 def find_encounters(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     common_locations = df.copy()

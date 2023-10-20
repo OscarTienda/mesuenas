@@ -6,15 +6,19 @@
 # INPUTS
 # ------
 # Place your input filepaths here. It is suggested to place them under
-# the "data/" directory and use absolute paths.
+# the "data/" directory.
 
+# This is the path to the folder where you have stored the Google Takeout data
+# for person x. Substitute the '...' with the path to your data.
 data_x_raw:
   type: pandas.JSONDataset
-  filepath: "data/Oscar/Takeout/Historial de ubicaciones/Records.json"
+  filepath: "data/.../Records.json"
 
+# This is the path to the folder where you have stored the Google Takeout data
+# for person y. Substitute the '...' with the path to your data.
 data_y_raw:
   type: pandas.JSONDataset
-  filepath: "data/Aina/Takeout/Historial de ubicaciones/Records.json"
+  filepath: "data/.../Records.json"
 
 # OUTPUTS
 # -------

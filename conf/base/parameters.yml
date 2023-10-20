@@ -1,6 +1,10 @@
-x_name: "Oscar"
+# Parameters for the me_suenas_kedro project
 
-y_name: "Aina"
+# Introduce the name of the person behind data_x
+x_name: 
+
+# Introduce the name of the person behind data_x
+y_name: 
 
 # Set our accuracy level
 # ----------------------
@@ -13,7 +17,7 @@ y_name: "Aina"
 # - Level '3': An accuracy of 1.11 meters with 5 decimal places (notation: +/- 00.00000)
 # - Level '4': An accuracy of 0.111 meters with 6 decimal places (notation: +/- 00.000000)
 #
-# These levels are defined in the Distance_Margin DataFrame.
+# These levels are defined in the Distance_Margin DataFrame. The default is level 3.
 
 accuracy_level: "3"
 
@@ -32,4 +36,4 @@ time_margin: 5
 # out any data that is not relevant to the analysis. The date should be
 # formatted as follows: 'YYYY-MM-DD HH:MM:SS'
 
-#first_meeting_date: 
+first_meeting_date: 
