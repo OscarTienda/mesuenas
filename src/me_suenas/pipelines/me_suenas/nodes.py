@@ -167,13 +167,11 @@ def combine_records(df_x: pd.DataFrame, df_y: pd.DataFrame, name_x: str, name_y:
 def find_encounters(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     common_locations = df.copy()
 
-    # Group by date
     grouped = common_locations.groupby("date")
 
     # Create a dictionary to hold each day's data
     encounters = {}
     for name, group in grouped:
-        # Create a DataFrame to hold each day's data
         encounters[name] = group.copy().drop_duplicates()
         print("Found encounters on", name)
 
